@@ -1,5 +1,8 @@
 # LeadFlow
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+
 > AI-driven lead generation & CRM automation — FlyRank internship capstone.
 
 LeadFlow is a lead management system that captures, qualifies, scores, and nurtures
@@ -28,6 +31,12 @@ organized, actionable sales pipeline.
 | Database | PostgreSQL / Supabase |
 | Automation | n8n (Docker) |
 | Tooling | Git, GitHub, Claude Code |
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org) 20 or later (LTS recommended) and npm
+- [Git](https://git-scm.com)
+- [Docker](https://www.docker.com) — for running the local n8n instance
 
 ## Getting Started
 
