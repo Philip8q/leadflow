@@ -42,6 +42,21 @@ n8n automation workflows. This is the FlyRank internship capstone.
 - **Ask** before destructive actions (deleting files, resetting git, dropping tables).
 - **Report** at the end of each task: what was built, files changed, commands to run, and next steps.
 
+## Lessons from FE-02 (Prompting Drill)
+
+Rules learned by comparing a vague-prompt build vs. a precise-prompt build of
+the same form (see `WORKFLOW.md`):
+
+- Every required/format/range constraint on a form field must be enforced
+  with an explicit JS validation function and inline error UI — never rely
+  on HTML attributes (`required`, `min`, `max`) alone.
+- If a checkbox/toggle implies a dependent field (e.g. "email notifications"
+  implies a destination email), that field must exist and its required-ness
+  must react to the toggle.
+- Every form test suite must include at least one failing/edge-case test
+  per validation rule, not just rendering + happy path — a passing suite is
+  only meaningful if it actually asserts the constraints.
+
 ## Author
 
 Philip — developer & automation engineer (Nairobi). Learning Python & JavaScript;
