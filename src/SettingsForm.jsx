@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FormField from "./FormField.jsx";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -66,15 +67,6 @@ function validateSettings(values) {
   return errors;
 }
 
-function FieldError({ id, message }) {
-  if (!message) return null;
-  return (
-    <span id={id} role="alert" className="field-error">
-      {message}
-    </span>
-  );
-}
-
 function SettingsForm() {
   const [values, setValues] = useState(INITIAL_VALUES);
   const [errors, setErrors] = useState({});
@@ -105,19 +97,14 @@ function SettingsForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <div>
-        <label htmlFor="displayName">Display name</label>
-        <input
-          id="displayName"
-          name="displayName"
-          type="text"
-          value={values.displayName}
-          onChange={handleChange}
-          aria-invalid={Boolean(errors.displayName)}
-          aria-describedby={errors.displayName ? "displayName-error" : undefined}
-        />
-        <FieldError id="displayName-error" message={errors.displayName} />
-      </div>
+      <FormField
+        id="displayName"
+        label="Display name"
+        type="text"
+        value={values.displayName}
+        onChange={handleChange}
+        error={errors.displayName}
+      />
 
       <div>
         <input
@@ -130,42 +117,28 @@ function SettingsForm() {
         <label htmlFor="emailNotifications">Email notifications</label>
       </div>
 
-      <div>
-        <label htmlFor="notificationEmail">Notification email</label>
-        <input
-          id="notificationEmail"
-          name="notificationEmail"
-          type="text"
-          value={values.notificationEmail}
-          onChange={handleChange}
-          required={values.emailNotifications}
-          aria-required={values.emailNotifications}
-          aria-invalid={Boolean(errors.notificationEmail)}
-          aria-describedby={
-            errors.notificationEmail ? "notificationEmail-error" : undefined
-          }
-        />
-        <FieldError id="notificationEmail-error" message={errors.notificationEmail} />
-      </div>
+      <FormField
+        id="notificationEmail"
+        label="Notification email"
+        type="text"
+        value={values.notificationEmail}
+        onChange={handleChange}
+        required={values.emailNotifications}
+        aria-required={values.emailNotifications}
+        error={errors.notificationEmail}
+      />
 
-      <div>
-        <label htmlFor="alertThreshold">Lead alert threshold</label>
-        <input
-          id="alertThreshold"
-          name="alertThreshold"
-          type="number"
-          min="0"
-          max="100"
-          step="1"
-          value={values.alertThreshold}
-          onChange={handleChange}
-          aria-invalid={Boolean(errors.alertThreshold)}
-          aria-describedby={
-            errors.alertThreshold ? "alertThreshold-error" : undefined
-          }
-        />
-        <FieldError id="alertThreshold-error" message={errors.alertThreshold} />
-      </div>
+      <FormField
+        id="alertThreshold"
+        label="Lead alert threshold"
+        type="number"
+        min="0"
+        max="100"
+        step="1"
+        value={values.alertThreshold}
+        onChange={handleChange}
+        error={errors.alertThreshold}
+      />
 
       <button type="submit">Save settings</button>
 
