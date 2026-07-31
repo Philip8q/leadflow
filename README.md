@@ -12,7 +12,17 @@ organized, actionable sales pipeline.
 
 ## Status
 
-🚧 **Early setup** — capstone scaffolding in progress.
+🏗️ **In development** — first working feature shipped, rest of the pipeline in progress.
+
+## Built So Far
+
+- **Lead Notification Preferences settings form** (`src/SettingsForm.jsx`) — validated
+  display name, notification email (conditionally required), and lead alert threshold,
+  built on a reusable `FormField` primitive. Fully tested (`src/SettingsForm.test.jsx`,
+  6 passing tests) and documented end-to-end in [`WORKFLOW.md`](./WORKFLOW.md) (a
+  vague-prompt vs. precise-prompt build comparison) and
+  [`docs/ai-fluency/week-2/PROMPT_ITERATION_LOG.md`](./docs/ai-fluency/week-2/PROMPT_ITERATION_LOG.md)
+  (a 5-layer prompt-engineering refactor, cross-model verified).
 
 ## Planned Features
 
@@ -42,14 +52,17 @@ organized, actionable sales pipeline.
 
 ```bash
 # clone the repo
-git clone <repo-url>
+git clone https://github.com/Philip8q/leadflow.git
 cd leadflow
 
-# install dependencies (once package.json exists)
+# install dependencies
 npm install
 
-# run the dev server (once configured)
+# run the dev server
 npm run dev
+
+# run the test suite
+npm test
 ```
 
 ## Project Conventions
