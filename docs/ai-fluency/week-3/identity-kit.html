@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philip Omondi — Identity Kit</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --main: #B5502F;
+    --text: #1A1A18;
+    --bg: #FAF7F2;
+    --accent: #C9A227;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+  }
+
+  h1, h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    color: var(--main);
+  }
+
+  .subtitle {
+    color: var(--text);
+    opacity: 0.7;
+    margin-bottom: 56px;
+    font-size: 1.05rem;
+  }
+
+  section {
+    margin-bottom: 56px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(26,26,24,0.1);
+  }
+
+  section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  /* Logo lockup */
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: var(--main);
+    color: var(--bg);
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .logo-word {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.6rem;
+  }
+
+  .logo-word span {
+    color: var(--main);
+  }
+
+  /* Type specimens */
+  .specimen {
+    margin-bottom: 24px;
+  }
+
+  .specimen-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+
+  .specimen-heading {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 2rem;
+  }
+
+  .specimen-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    max-width: 520px;
+  }
+
+  /* Palette */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .swatch {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(26,26,24,0.1);
+  }
+
+  .swatch-color {
+    height: 84px;
+  }
+
+  .swatch-info {
+    padding: 10px 14px;
+    background: #fff;
+    font-size: 0.85rem;
+  }
+
+  .swatch-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .swatch-hex {
+    font-family: 'Inter', monospace;
+    opacity: 0.65;
+  }
+
+  /* Style note */
+  .style-note {
+    background: #fff;
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    border-radius: 4px;
+    font-size: 1.05rem;
+  }
+
+  .style-note strong {
+    color: var(--main);
+  }
+
+  footer {
+    margin-top: 64px;
+    font-size: 0.85rem;
+    opacity: 0.55;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Identity Kit</h1>
+  <p class="subtitle">Philip Omondi — Front-End Engineer Intern, FlyRank</p>
+
+  <section>
+    <h2>Type</h2>
+    <div class="specimen">
+      <div class="specimen-label">Heading — Fraunces (600)</div>
+      <div class="specimen-heading">LeadFlow, built for real leads.</div>
+    </div>
+    <div class="specimen">
+      <div class="specimen-label">Body — Inter (400)</div>
+      <div class="specimen-body">I build tools for small real estate businesses in Kenya who are getting priced out of the ad war — starting with LeadFlow.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Palette</h2>
+    <div class="palette">
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--main);"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Main — Terracotta</div>
+          <div class="swatch-hex">#B5502F</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--text);"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text — Near-black</div>
+          <div class="swatch-hex">#1A1A18</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.1);"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Background — Warm off-white</div>
+          <div class="swatch-hex">#FAF7F2</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--accent);"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Accent — Muted gold</div>
+          <div class="swatch-hex">#C9A227</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Logo / Favicon</h2>
+    <div class="logo-row">
+      <div class="logo-mark">P</div>
+      <div class="logo-word">Philip <span>Omondi</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Style note</h2>
+    <p class="style-note">
+      <strong>Fraunces</strong> (headings) + <strong>Inter</strong> (body); terracotta <strong>#B5502F</strong>, near-black <strong>#1A1A18</strong>, warm off-white <strong>#FAF7F2</strong>, muted gold <strong>#C9A227</strong> accent.<br>
+      Mood: warm, grounded, human — trust without corporate polish.
+    </p>
+  </section>
+
+  <footer>FlyRank AI Fluency — Week 3, Identity Kit</footer>
+</main>
+</body>
+</html>
