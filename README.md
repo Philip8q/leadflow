@@ -16,11 +16,17 @@ organized, actionable sales pipeline.
 
 ## Built So Far
 
-- **Lead Notification Preferences settings form** (`src/SettingsForm.jsx`) — validated
-  display name, notification email (conditionally required), and lead alert threshold,
-  built on a reusable `FormField` primitive. Fully tested (`src/SettingsForm.test.jsx`,
-  6 passing tests) and documented end-to-end in [`WORKFLOW.md`](./WORKFLOW.md) (a
-  vague-prompt vs. precise-prompt build comparison) and
+- **App skeleton** — Next.js (App Router) with routed placeholder pages for every
+  screen in the portfolio sitemap (Home, Case Study, About, Contact), a shared
+  layout with responsive nav, Tailwind design tokens matching the
+  [identity kit](./docs/ai-fluency/week-3/identity-kit.html) brand, and a
+  `/health` page + `/api/health` route for deployment checks.
+- **Lead Notification Preferences settings form** (`components/SettingsForm.jsx`) —
+  validated display name, notification email (conditionally required), and lead
+  alert threshold, built on a reusable `FormField` primitive. Fully tested
+  (`components/SettingsForm.test.jsx`, 5 passing tests), live at `/demo`, and
+  documented end-to-end in [`WORKFLOW.md`](./WORKFLOW.md) (a vague-prompt vs.
+  precise-prompt build comparison) and
   [`docs/ai-fluency/week-2/PROMPT_ITERATION_LOG.md`](./docs/ai-fluency/week-2/PROMPT_ITERATION_LOG.md)
   (a 5-layer prompt-engineering refactor, cross-model verified).
 
@@ -36,11 +42,12 @@ organized, actionable sales pipeline.
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React (bundler TBD) |
+| Frontend | Next.js (App Router) + Tailwind CSS v4 |
 | Backend | Node.js + Express (REST API) |
 | Database | PostgreSQL / Supabase |
 | Automation | n8n (Docker) |
 | Tooling | Git, GitHub, Claude Code |
+| Deployment | Vercel — preview build on every push |
 
 ## Prerequisites
 
@@ -64,6 +71,17 @@ npm run dev
 # run the test suite
 npm test
 ```
+
+## Deployment
+
+Deployed on [Vercel](https://vercel.com), zero-config for Next.js:
+
+1. Import the GitHub repo in the Vercel dashboard (New Project → select `leadflow`).
+2. Leave build settings on their Next.js defaults.
+3. If you add a `NEXT_PUBLIC_SITE_URL` override, set it under Project Settings →
+   Environment Variables (see [`.env.example`](./.env.example)) — not required in
+   normal use, since Vercel sets `VERCEL_URL` automatically.
+4. Every push gets its own preview deployment; merges to `main` deploy to production.
 
 ## Project Conventions
 
