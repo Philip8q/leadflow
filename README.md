@@ -29,6 +29,15 @@ organized, actionable sales pipeline.
   precise-prompt build comparison) and
   [`docs/ai-fluency/week-2/PROMPT_ITERATION_LOG.md`](./docs/ai-fluency/week-2/PROMPT_ITERATION_LOG.md)
   (a 5-layer prompt-engineering refactor, cross-model verified).
+- **Accessible component playground** (`playground/`) — a Modal, Tabs, and
+  Disclosure built from scratch against their W3C ARIA Authoring Practices
+  patterns, verified with keyboard-interaction tests, compared against
+  shadcn/ui's equivalents in `playground/NOTES.md`.
+- **Lead-qualification chat** (`app/api/chat/route.js`, `app/demo/lead-chat/`) —
+  a streaming AI chat demoing LeadFlow's actual planned qualification feature,
+  built on the AI SDK (`streamText` + `useChat`) via the Vercel AI Gateway.
+  Model + system prompt live in `lib/ai/lead-chat-config.js`. Live at
+  `/demo/lead-chat`.
 
 ## Planned Features
 
