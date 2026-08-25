@@ -26,6 +26,10 @@ yarn-error.log*
 coverage/
 .turbo/
 
+# TypeScript
+next-env.d.ts
+*.tsbuildinfo
+
 # Editor / OS
 .vscode/*
 !.vscode/extensions.json
