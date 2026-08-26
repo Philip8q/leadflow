@@ -12,8 +12,8 @@
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        -64,
-        16
+        -100,
+        0
       ],
       "typeVersion": 1.1
     },
@@ -25,8 +25,8 @@
       },
       "type": "n8n-nodes-base.code",
       "position": [
-        160,
-        16
+        140,
+        0
       ],
       "typeVersion": 2
     },
@@ -45,8 +45,8 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "position": [
-        384,
-        224
+        380,
+        200
       ],
       "typeVersion": 1
     },
@@ -64,8 +64,8 @@
       "onError": "continueErrorOutput",
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "position": [
-        384,
-        16
+        380,
+        0
       ],
       "typeVersion": 1.2
     },
@@ -86,8 +86,8 @@
         "modelName": "models/gemini-2.5-flash"
       },
       "position": [
-        384,
-        528
+        620,
+        600
       ]
     },
     {
@@ -104,8 +104,8 @@
       "notes": "Fallback path: only runs if Groq's Extract Trends node errors. Same prompt/schema as the primary extractor.",
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "position": [
-        384,
-        320
+        620,
+        400
       ],
       "typeVersion": 1.2,
       "onError": "continueErrorOutput"
@@ -127,8 +127,8 @@
       },
       "type": "n8n-nodes-base.set",
       "position": [
-        552,
-        16
+        620,
+        0
       ],
       "typeVersion": 3
     },
@@ -149,8 +149,8 @@
       },
       "type": "n8n-nodes-base.set",
       "position": [
-        552,
-        320
+        860,
+        400
       ],
       "typeVersion": 3
     },
@@ -162,8 +162,8 @@
       },
       "type": "n8n-nodes-base.code",
       "position": [
-        784,
-        16
+        1100,
+        0
       ],
       "typeVersion": 2
     },
@@ -176,8 +176,8 @@
       "notes": "Reached only if BOTH Groq and Gemini fail on the same run. Returns an empty trends array so the pipeline still completes and sends an honest 'no trends this run' brief instead of crashing.",
       "type": "n8n-nodes-base.code",
       "position": [
-        552,
-        624
+        860,
+        600
       ],
       "typeVersion": 2
     }
