@@ -1,0 +1,293 @@
+{
+  "id": "deog9vHBh5XVNAqd",
+  "name": "[Main] Weekly Industry Brief",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "weekly-industry-brief-run",
+        "responseMode": "responseNode",
+        "options": {},
+        "authentication": "headerAuth"
+      },
+      "id": "wh",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "weekly-industry-brief-run",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Da4nn2q5ngSynC0V",
+          "name": "Weekly Brief Webhook Secret"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nreturn [{ json: { run_id: 'run_' + now.getTime(), started_at: now.toISOString(), started_ms: now.getTime() } }];"
+      },
+      "id": "init",
+      "name": "Init Run",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "9YursrjwF57LI7xm",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "callgather",
+      "name": "Call Gather Sources",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fvmFlq6OcOwk8Rns",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "callsynth",
+      "name": "Call Synthesize Trends",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rCGvi1oBEsmWW6o1",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "callfmt",
+      "name": "Call Format & Deliver",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const init = $('Init Run').first().json;\nconst r = $json;\nconst completedAt = new Date().toISOString();\nconst elapsed = Math.round((Date.now() - init.started_ms) / 1000);\nconst failedCount = (r.sources_failed || []).length;\nreturn [{ json: {\n  run_id: init.run_id,\n  started_at: init.started_at,\n  completed_at: completedAt,\n  sources_attempted: (r.sources_ok_count || 0) + failedCount,\n  sources_succeeded: r.sources_ok_count || 0,\n  trends_extracted: r.trend_count || 0,\n  failures: JSON.stringify(r.sources_failed || []),\n  elapsed_seconds: elapsed,\n  synthesis_tool: r.trend_provider || 'groq',\n  manual_baseline_minutes: ''\n}}];"
+      },
+      "id": "buildlog",
+      "name": "Build Run Log Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xCZTGDne5vYPYFILX_tcFLo8TSthuhVW2CleWh1ffsw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Run Log",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "logrow",
+      "name": "Append Run Log Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1320,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OKAr6x4Ca5N5n2dL",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "resp",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "id": "weeklySchedule",
+      "name": "Weekly Schedule",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "0 8 * * 1",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "notes": "Runs the brief automatically every Monday 08:00 (server time). The Webhook trigger stays in place for on-demand/manual/testing runs.",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -64,
+        192
+      ],
+      "typeVersion": 1.2
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Init Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Run": {
+      "main": [
+        [
+          {
+            "node": "Call Gather Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Gather Sources": {
+      "main": [
+        [
+          {
+            "node": "Call Synthesize Trends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Synthesize Trends": {
+      "main": [
+        [
+          {
+            "node": "Call Format & Deliver",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Format & Deliver": {
+      "main": [
+        [
+          {
+            "node": "Build Run Log Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Run Log Row": {
+      "main": [
+        [
+          {
+            "node": "Append Run Log Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Run Log Row": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Schedule": {
+      "main": [
+        [
+          {
+            "node": "Init Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "gsYWb1K1n9yFA56t"
+  },
+  "staticData": {
+    "node:Weekly Schedule": {
+      "recurrenceRules": []
+    }
+  },
+  "pinData": null,
+  "versionId": "204957ba-bf66-4798-9c5a-ddc4d97b072c",
+  "tags": [
+    {
+      "name": "Weekly Industry Brief"
+    }
+  ]
+}

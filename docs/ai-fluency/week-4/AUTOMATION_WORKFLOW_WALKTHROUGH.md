@@ -6,6 +6,13 @@ Brief: https://internship.flyrank.ai/intern/assignments/FL-04
 Author: Philip
 Date: 2026-08-21 (updated 2026-08-26)
 
+**Workflow exports:** the 4 real n8n workflows behind this pipeline are exported as JSON in [`n8n-workflows/`](./n8n-workflows/) — importable directly into any n8n instance (Workflows → Import from File). Credential values are never included in n8n exports (only credential names/IDs), so each workflow needs its own Groq/Gemini/Google Sheets/Gmail SMTP/webhook-auth credentials reconnected after import.
+
+- [`n8n-workflows/main-weekly-industry-brief.json`](./n8n-workflows/main-weekly-industry-brief.json) — orchestrator: Webhook + weekly Schedule trigger, calls the 3 sub-workflows in sequence, builds and appends the Run Log row.
+- [`n8n-workflows/sub-gather-sources.json`](./n8n-workflows/sub-gather-sources.json) — reads the Sources sheet, fetches each source (RSS or HTML), normalizes output.
+- [`n8n-workflows/sub-synthesize-trends.json`](./n8n-workflows/sub-synthesize-trends.json) — Groq-first / Gemini-fallback trend extraction, with the total-failure fallback path.
+- [`n8n-workflows/sub-format-and-deliver.json`](./n8n-workflows/sub-format-and-deliver.json) — builds the Markdown brief and sends it via Gmail SMTP.
+
 ## 1. Step Diagram
 
 ```

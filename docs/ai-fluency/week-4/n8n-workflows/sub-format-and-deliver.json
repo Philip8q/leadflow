@@ -1,0 +1,123 @@
+{
+  "id": "rCGvi1oBEsmWW6o1",
+  "name": "[Sub] Format & Deliver",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "trig3",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $json;\nconst trends = d.trends || [];\nconst dateStr = new Date().toISOString().slice(0,10);\nlet md = '# Weekly Industry Brief - ' + dateStr + '\\n\\n';\nif (!trends.length) {\n  md += '_No trends could be extracted this run (0 usable sources, or nothing groundable was found).\\n\\n';\n} else {\n  trends.forEach((t, i) => {\n    md += '## ' + (i+1) + '. ' + t.trend_summary + '\\n*Source:* ' + t.source_url + '\\n*Why it matters for LeadFlow:* ' + t.relevance_note + '\\n\\n';\n  });\n}\nif (d.sources_failed && d.sources_failed.length) {\n  md += '\\n---\\n**Sources that failed this run:**\\n' + d.sources_failed.map(f => '- ' + f.source_name + ' (' + f.status + ')').join('\\n');\n}\nreturn [{ json: {\n  markdown: md,\n  subject: 'Weekly Industry Brief - ' + dateStr,\n  trend_count: trends.length,\n  sources_ok_count: d.sources_ok_count,\n  sources_failed: d.sources_failed || [],\n  trend_provider: d.trend_provider\n}}];"
+      },
+      "id": "buildmd",
+      "name": "Build Markdown",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "email",
+        "operation": "send",
+        "fromEmail": "caysonb8@gmail.com",
+        "toEmail": "caysonb8@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.markdown }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "sendmail",
+      "name": "Send Brief Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "IIXa7RfRj0XRnDKu",
+          "name": "Gmail SMTP - caysonb8"
+        }
+      },
+      "webhookId": "ccaa89f9-8757-4820-93ae-8da33487ca56"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $('Build Markdown').first().json;\nreturn [{ json: {\n  trend_count: b.trend_count,\n  sources_ok_count: b.sources_ok_count,\n  sources_failed: b.sources_failed,\n  trend_provider: b.trend_provider\n}}];"
+      },
+      "id": "retsum",
+      "name": "Return Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Build Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Markdown": {
+      "main": [
+        [
+          {
+            "node": "Send Brief Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Brief Email": {
+      "main": [
+        [
+          {
+            "node": "Return Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "gsYWb1K1n9yFA56t"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "65fac729-01c7-4163-ba2c-0c5f8f1780bf",
+  "tags": [
+    {
+      "name": "Weekly Industry Brief"
+    }
+  ]
+}

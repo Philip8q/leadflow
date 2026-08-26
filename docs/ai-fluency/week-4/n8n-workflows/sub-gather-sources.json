@@ -1,0 +1,311 @@
+{
+  "id": "9YursrjwF57LI7xm",
+  "name": "[Sub] Gather Sources",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "trig",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xCZTGDne5vYPYFILX_tcFLo8TSthuhVW2CleWh1ffsw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sources",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "readsrc",
+      "name": "Read Sources",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OKAr6x4Ca5N5n2dL",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.filter(i => String(i.json.active).toLowerCase() === 'true');"
+      },
+      "id": "filteract",
+      "name": "Filter Active",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.method }}",
+              "rightValue": "rss",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "routeby",
+      "name": "Route By Method",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "id": "rssread",
+      "name": "RSS Feed Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src = $('Filter Active').all().find(i => i.json.method === 'rss');\nconst entries = $input.all();\nif (!entries.length || !entries[0].json || Object.keys(entries[0].json).length === 0) {\n  return [{ json: { source_name: src ? src.json.source_name : 'unknown', url: src ? src.json.url : '', fetched_at: new Date().toISOString(), raw_text: '', status: 'empty' } }];\n}\nconst top = entries.slice(0, 5);\nconst text = top.map(i => (i.json.title || '') + '. ' + (i.json.contentSnippet || i.json.content || i.json.summary || '')).join('\\n\\n').replace(/\\s+/g, ' ').trim();\nreturn [{ json: { source_name: src ? src.json.source_name : 'unknown', url: src ? src.json.url : '', fetched_at: new Date().toISOString(), raw_text: text.slice(0, 4000), status: text ? 'ok' : 'empty' } }];"
+      },
+      "id": "normrss",
+      "name": "Normalize RSS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "onError": "continueRegularOutput",
+      "id": "httpreq",
+      "name": "HTTP Request (HTML)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "page_text",
+              "cssSelector": "body",
+              "returnValue": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "htmlext",
+      "name": "HTML Extract",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const meta = $('Route By Method').item.json;\nconst raw = (($json.page_text) || '').replace(/\\s+/g, ' ').trim();\nconst status = $json.error ? 'error' : (raw.length < 50 ? 'empty' : 'ok');\nreturn { json: { source_name: meta.source_name, url: meta.url, fetched_at: new Date().toISOString(), raw_text: raw.slice(0, 4000), status } };"
+      },
+      "id": "normhtml",
+      "name": "Normalize HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      },
+      "id": "merge1",
+      "name": "Merge Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1540,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Read Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sources": {
+      "main": [
+        [
+          {
+            "node": "Filter Active",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Active": {
+      "main": [
+        [
+          {
+            "node": "Route By Method",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route By Method": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed Read",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request (HTML)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Read": {
+      "main": [
+        [
+          {
+            "node": "Normalize RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize RSS": {
+      "main": [
+        [
+          {
+            "node": "Merge Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request (HTML)": {
+      "main": [
+        [
+          {
+            "node": "HTML Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Extract": {
+      "main": [
+        [
+          {
+            "node": "Normalize HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "gsYWb1K1n9yFA56t"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "91d29c77-8764-4c9d-8791-3c3502a7a808",
+  "tags": [
+    {
+      "name": "Weekly Industry Brief"
+    }
+  ]
+}
