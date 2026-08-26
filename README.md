@@ -35,9 +35,12 @@ organized, actionable sales pipeline.
   shadcn/ui's equivalents in `playground/NOTES.md`.
 - **Lead-qualification chat** (`app/api/chat/route.js`, `app/demo/lead-chat/`) —
   a streaming AI chat demoing LeadFlow's actual planned qualification feature,
-  built on the AI SDK (`streamText` + `useChat`) via the Vercel AI Gateway.
+  built on the AI SDK (`streamText` + `useChat`) via OpenRouter's free tier.
   Model + system prompt live in `lib/ai/lead-chat-config.js`. Live at
-  `/demo/lead-chat`.
+  `/demo/lead-chat`, written up in
+  [`docs/ai-fluency/week-4/STREAMING_CHAT.md`](./docs/ai-fluency/week-4/STREAMING_CHAT.md)
+  (including a real production bug — a free-tier model that timed out on
+  Vercel despite working locally — caught and fixed).
 
 ## Planned Features
 
