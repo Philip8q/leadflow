@@ -39,3 +39,6 @@ Thumbs.db
 
 # n8n local data (do not commit workflow data or credentials)
 n8n_data/
+
+.vercel
+.env*
