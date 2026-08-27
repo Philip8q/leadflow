@@ -1,10 +1,12 @@
 import {
   convertToModelMessages,
   createUIMessageStreamResponse,
+  stepCountIs,
   streamText,
   toUIMessageStream,
 } from "ai";
 import { chatModel, CHAT_SYSTEM_PROMPT } from "@/lib/ai/lead-chat-config";
+import { scoreLead } from "@/lib/ai/lead-chat-tools";
 
 // Streaming responses can run longer than the default serverless timeout.
 export const maxDuration = 30;
@@ -16,6 +18,10 @@ export async function POST(req) {
     model: chatModel,
     instructions: CHAT_SYSTEM_PROMPT,
     messages: await convertToModelMessages(messages),
+    tools: { scoreLead },
+    // Allow one extra step after a tool call so the model can respond in
+    // text once it has the tool's result, instead of stopping mid-turn.
+    stopWhen: stepCountIs(3),
   });
 
   return createUIMessageStreamResponse({

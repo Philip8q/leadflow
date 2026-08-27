@@ -2,6 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
+import { LeadScoreTool } from "@/components/LeadScoreCard";
 
 // How close to the bottom (in px) still counts as "at the bottom" for
 // auto-scroll purposes. A user resting a few px above the exact bottom
@@ -12,11 +13,11 @@ function isNearBottom(el) {
   return el.scrollHeight - el.scrollTop - el.clientHeight < BOTTOM_THRESHOLD;
 }
 
-function messageText(message) {
-  return message.parts
-    .filter((part) => part.type === "text")
-    .map((part) => part.text)
-    .join("");
+// Parts this UI knows how to render. Anything else (e.g. hidden
+// reasoning-model "thinking" parts) is intentionally skipped, not shown.
+function isRenderablePart(part) {
+  if (part.type === "text") return part.text.length > 0;
+  return part.type === "tool-scoreLead";
 }
 
 export default function LeadChatPage() {
@@ -61,7 +62,8 @@ export default function LeadChatPage() {
 
   const lastMessage = messages[messages.length - 1];
   const lastMessageIsEmptyAssistant =
-    lastMessage?.role === "assistant" && messageText(lastMessage) === "";
+    lastMessage?.role === "assistant" &&
+    !lastMessage.parts.some(isRenderablePart);
 
   return (
     <div className="flex h-[calc(100dvh-8rem)] flex-col gap-4">
@@ -89,24 +91,45 @@ export default function LeadChatPage() {
           )}
 
           {messages.map((message) => {
-            const text = messageText(message);
             const isUser = message.role === "user";
-            const isEmptyAssistant = !isUser && text === "";
+            const renderableParts = message.parts.filter(isRenderablePart);
+            const isEmptyAssistant = !isUser && renderableParts.length === 0;
 
             return (
               <div
                 key={message.id}
-                className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                className={`flex flex-col gap-2 ${isUser ? "items-end" : "items-start"}`}
               >
-                <div
-                  className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
-                    isUser
-                      ? "bg-main text-bg"
-                      : "border border-black/10 bg-bg text-text"
-                  }`}
-                >
-                  {isEmptyAssistant ? <ThinkingIndicator /> : text}
-                </div>
+                {isEmptyAssistant && (
+                  <div className="max-w-[85%] rounded-lg border border-black/10 bg-bg px-3 py-2 text-sm text-text">
+                    <ThinkingIndicator />
+                  </div>
+                )}
+
+                {renderableParts.map((part, index) => {
+                  if (part.type === "text") {
+                    return (
+                      <div
+                        key={`${message.id}-text-${index}`}
+                        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
+                          isUser
+                            ? "bg-main text-bg"
+                            : "border border-black/10 bg-bg text-text"
+                        }`}
+                      >
+                        {part.text}
+                      </div>
+                    );
+                  }
+
+                  if (part.type === "tool-scoreLead") {
+                    return (
+                      <LeadScoreTool key={part.toolCallId} part={part} />
+                    );
+                  }
+
+                  return null;
+                })}
               </div>
             );
           })}

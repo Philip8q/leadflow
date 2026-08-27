@@ -41,6 +41,19 @@ organized, actionable sales pipeline.
   [`docs/ai-fluency/week-4/STREAMING_CHAT.md`](./docs/ai-fluency/week-4/STREAMING_CHAT.md)
   (including a real production bug — a free-tier model that timed out on
   Vercel despite working locally — caught and fixed).
+- **`scoreLead` tool** (`lib/ai/lead-chat-tools.js`) — a server-side tool the
+  lead-qualification chat calls once it has gathered enough about a visitor,
+  rendering a real lead score card (not a JSON dump) with a distinct visual
+  state for each stage of the tool call. See the contract below and the full
+  write-up in
+  [`docs/ai-fluency/week-4/TOOL_RESULTS_UI.md`](./docs/ai-fluency/week-4/TOOL_RESULTS_UI.md).
+
+  | | |
+  | --- | --- |
+  | **Name** | `scoreLead` |
+  | **Input schema** | `{ intent: "buy" \| "sell" \| "rent", timeline: "immediate" \| "weeks" \| "months" \| "browsing", budgetKnown: boolean, contactMethod: "phone" \| "email" \| "whatsapp" \| "none", propertyType: string }` |
+  | **Return shape** | `{ score: number (0-100), tier: "Hot" \| "Warm" \| "Cold", breakdown: Array<{ label: string, points: number, max: number, detail: string }>, summary: string }` |
+  | **Error case** | Throws if called with essentially no qualifying signal gathered yet — a real rejection, not a simulated one, rendered as a designed error card client-side |
 
 ## Planned Features
 
