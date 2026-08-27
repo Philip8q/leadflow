@@ -1,0 +1,226 @@
+{
+  "id": "aJR3EGI3biH4gqID",
+  "name": "[Sub] Gather n8n Executions",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "id": "trig2",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "listwf",
+      "name": "List Workflows",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        -120
+      ],
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "url": "<YOUR_N8N_PUBLIC_URL>/api/v1/workflows?limit=250",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9x2W7rIGsCAXB1fF",
+          "name": "n8n API Self"
+        }
+      }
+    },
+    {
+      "id": "listex1",
+      "name": "List Executions Page 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        80
+      ],
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "url": "<YOUR_N8N_PUBLIC_URL>/api/v1/executions?limit=250",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9x2W7rIGsCAXB1fF",
+          "name": "n8n API Self"
+        }
+      }
+    },
+    {
+      "id": "listex2",
+      "name": "List Executions Page 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        80
+      ],
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "url": "=<YOUR_N8N_PUBLIC_URL>/api/v1/executions?limit=250&cursor={{ encodeURIComponent($('List Executions Page 1').item.json.nextCursor || '') }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9x2W7rIGsCAXB1fF",
+          "name": "n8n API Self"
+        }
+      }
+    },
+    {
+      "id": "listex3",
+      "name": "List Executions Page 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        80
+      ],
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "url": "=<YOUR_N8N_PUBLIC_URL>/api/v1/executions?limit=250&cursor={{ encodeURIComponent($('List Executions Page 2').item.json.nextCursor || '') }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9x2W7rIGsCAXB1fF",
+          "name": "n8n API Self"
+        }
+      }
+    },
+    {
+      "id": "merge1",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      }
+    },
+    {
+      "id": "aggregate",
+      "name": "Aggregate Executions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const sinceMs = Date.now() - 7 * 24 * 60 * 60 * 1000;\nlet n8n_ok = true;\nlet error = null;\nlet byWorkflow = {};\nlet failures = [];\nlet total = 0;\nlet truncated = false;\n\nconst workflowsResp = $('List Workflows').first().json;\nconst pages = ['List Executions Page 1', 'List Executions Page 2', 'List Executions Page 3']\n  .map(name => $(name).first().json);\n\nif (workflowsResp && workflowsResp.error) {\n  n8n_ok = false;\n  error = 'Could not list workflows: ' + JSON.stringify(workflowsResp.error);\n} else if (pages[0] && pages[0].error) {\n  n8n_ok = false;\n  error = 'Could not list executions: ' + JSON.stringify(pages[0].error);\n} else {\n  try {\n    const nameById = {};\n    for (const w of (workflowsResp.data || [])) nameById[w.id] = w.name;\n\n    let allExecutions = [];\n    for (const p of pages) {\n      if (p && Array.isArray(p.data)) allExecutions = allExecutions.concat(p.data);\n    }\n\n    const lastPage = pages[pages.length - 1];\n    const oldestFetched = allExecutions.length\n      ? new Date(allExecutions[allExecutions.length - 1].startedAt).getTime()\n      : Date.now();\n    if (lastPage && lastPage.nextCursor && oldestFetched >= sinceMs) {\n      truncated = true; // fetched pages still didn't reach 7 days back\n    }\n\n    const recent = allExecutions.filter(e => new Date(e.startedAt).getTime() >= sinceMs);\n    total = recent.length;\n\n    for (const e of recent) {\n      const name = nameById[e.workflowId] || e.workflowId;\n      if (!byWorkflow[name]) byWorkflow[name] = { success: 0, error: 0 };\n      if (e.status === 'success') {\n        byWorkflow[name].success++;\n      } else {\n        byWorkflow[name].error++;\n        failures.push({ workflow: name, executionId: e.id, startedAt: e.startedAt, status: e.status });\n      }\n    }\n  } catch (e) {\n    n8n_ok = false;\n    error = e.message;\n  }\n}\n\nreturn [{ json: { n8n_ok, error, total_executions: total, by_workflow: byWorkflow, failures, truncated } }];"
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "List Workflows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List Executions Page 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Executions Page 1": {
+      "main": [
+        [
+          {
+            "node": "List Executions Page 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Executions Page 2": {
+      "main": [
+        [
+          {
+            "node": "List Executions Page 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Executions Page 3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "OQMzL2hWmPZpatrg"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "c2b0b584-59ff-4d11-9017-2870636c34cc",
+  "tags": [
+    {
+      "name": "Weekly Review Assistant"
+    }
+  ]
+}

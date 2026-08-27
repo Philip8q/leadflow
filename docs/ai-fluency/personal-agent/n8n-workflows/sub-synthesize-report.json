@@ -1,0 +1,309 @@
+{
+  "id": "8y4UNDKdOXASRVBQ",
+  "name": "[Sub] Synthesize Report",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "id": "trig3",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "buildctx",
+      "name": "Build Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        140,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst git = input.git || {};\nconst n8n = input.n8n || {};\nconst portalText = (input.portal_status_text || '').trim();\n\nlet context = '=== GIT ACTIVITY (last 7 days) ===\\n';\nif (git.github_ok === false) {\n  context += `COULD NOT FETCH GITHUB DATA. Error: ${git.error}\\n`;\n} else if (!git.total_commits) {\n  context += 'No commits in any repo this week.\\n';\n} else {\n  for (const r of (git.repos || [])) {\n    if (!r.commit_count) continue;\n    context += `Repo: ${r.name} (${r.commit_count} commits)\\n`;\n    for (const c of r.commits) context += `  - ${c.message} (${c.sha})\\n`;\n  }\n}\n\ncontext += '\\n=== N8N AUTOMATION RUNS (last 7 days) ===\\n';\nif (n8n.n8n_ok === false) {\n  context += `COULD NOT FETCH N8N EXECUTION DATA. Error: ${n8n.error}\\n`;\n} else if (!n8n.total_executions) {\n  context += 'No workflow executions this week.\\n';\n} else {\n  for (const [name, counts] of Object.entries(n8n.by_workflow || {})) {\n    context += `${name}: ${counts.success} succeeded, ${counts.error} failed\\n`;\n  }\n  if ((n8n.failures || []).length) {\n    context += 'Failures:\\n';\n    for (const f of n8n.failures) context += `  - ${f.workflow} (execution ${f.executionId}, ${f.startedAt})\\n`;\n  }\n}\n\ncontext += '\\n=== FLYRANK PORTAL STATUS ===\\n';\ncontext += portalText ? portalText : 'NOT PROVIDED THIS RUN.';\n\nreturn [{ json: { context } }];"
+      }
+    },
+    {
+      "id": "extract",
+      "name": "Extract Report",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        380,
+        0
+      ],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\"type\": \"object\", \"properties\": {\"report\": {\"type\": \"string\", \"description\": \"The full weekly review report in markdown, following the three-section structure exactly.\"}}, \"required\": [\"report\"]}",
+        "text": "={{ $json.context }}",
+        "options": {
+          "systemPromptTemplate": "You are Philip's Weekly Review Assistant. You will be given three sections of plain-text context: GIT ACTIVITY, N8N AUTOMATION RUNS, and FLYRANK PORTAL STATUS, each covering the last 7 days.\n\nProduce a report with exactly three headed sections: Shipped, Stalled / Blocked, and Next week.\n\nShipped: real commits/features actually present in the GIT ACTIVITY section, grouped by repo. Skip purely cosmetic commits (formatting, lint fixes) unless nothing else happened that week.\n\nStalled / Blocked: anything that errored (check N8N AUTOMATION RUNS for failures) or was clearly started but left unfinished.\n\nNext week: a short prioritized list, inferred only from what's visibly incomplete in the context given -- never invent a task that isn't evidenced by the data.\n\nCRITICAL RULES:\n- If a section says a data source could not be fetched (look for 'COULD NOT FETCH' in the context), say so explicitly in your report for that section instead of guessing or silently omitting it.\n- If a section says there was no activity, report that honestly as a quiet week -- never pad the report to look more productive than the actual data supports.\n- Never state that something is 'done' without a specific commit, execution log entry, or portal status line backing it up.\n- Keep the whole report under 300 words, plain text with markdown headers, no preamble before the first heading."
+        }
+      }
+    },
+    {
+      "id": "groqchat",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        380,
+        200
+      ],
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "credentials": {
+        "groqApi": {
+          "id": "9aq5ushZHU0x4DER",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "id": "tagGroq",
+      "name": "Tag Provider: Groq",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        620,
+        0
+      ],
+      "parameters": {
+        "include": "all",
+        "fields": {
+          "values": [
+            {
+              "name": "ai_provider",
+              "stringValue": "groq"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "extractFallback",
+      "name": "Extract Report - Gemini Fallback",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        620,
+        400
+      ],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\"type\": \"object\", \"properties\": {\"report\": {\"type\": \"string\", \"description\": \"The full weekly review report in markdown, following the three-section structure exactly.\"}}, \"required\": [\"report\"]}",
+        "text": "={{ $json.context }}",
+        "options": {
+          "systemPromptTemplate": "You are Philip's Weekly Review Assistant. You will be given three sections of plain-text context: GIT ACTIVITY, N8N AUTOMATION RUNS, and FLYRANK PORTAL STATUS, each covering the last 7 days.\n\nProduce a report with exactly three headed sections: Shipped, Stalled / Blocked, and Next week.\n\nShipped: real commits/features actually present in the GIT ACTIVITY section, grouped by repo. Skip purely cosmetic commits (formatting, lint fixes) unless nothing else happened that week.\n\nStalled / Blocked: anything that errored (check N8N AUTOMATION RUNS for failures) or was clearly started but left unfinished.\n\nNext week: a short prioritized list, inferred only from what's visibly incomplete in the context given -- never invent a task that isn't evidenced by the data.\n\nCRITICAL RULES:\n- If a section says a data source could not be fetched (look for 'COULD NOT FETCH' in the context), say so explicitly in your report for that section instead of guessing or silently omitting it.\n- If a section says there was no activity, report that honestly as a quiet week -- never pad the report to look more productive than the actual data supports.\n- Never state that something is 'done' without a specific commit, execution log entry, or portal status line backing it up.\n- Keep the whole report under 300 words, plain text with markdown headers, no preamble before the first heading."
+        }
+      }
+    },
+    {
+      "id": "geminichat",
+      "name": "Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        620,
+        600
+      ],
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "credentials": {
+        "googlePalmApi": {
+          "id": "G2waMqhZS8IL60xn",
+          "name": "Google Gemini - Fallback"
+        }
+      }
+    },
+    {
+      "id": "tagGeminiFallback",
+      "name": "Tag Provider: Gemini Fallback",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        860,
+        400
+      ],
+      "parameters": {
+        "include": "all",
+        "fields": {
+          "values": [
+            {
+              "name": "ai_provider",
+              "stringValue": "gemini_fallback"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "handleTotalFailure",
+      "name": "Handle Total Failure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        600
+      ],
+      "parameters": {
+        "jsCode": "const ctx = $('Build Context').first().json.context;\nreturn [{ json: {\n  output: { report: \"Both Groq and Gemini failed to generate this week's report. Raw data below:\\n\\n\" + ctx },\n  ai_provider: 'both_failed',\n}}];"
+      }
+    },
+    {
+      "id": "flatten",
+      "name": "Flatten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const out = $json.output && $json.output.report ? $json.output.report : '(no report text returned)';\nreturn [{ json: { report: out, report_provider: $json.ai_provider } }];"
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Build Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Context": {
+      "main": [
+        [
+          {
+            "node": "Extract Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract Report",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Report": {
+      "main": [
+        [
+          {
+            "node": "Tag Provider: Groq",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Report - Gemini Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag Provider: Groq": {
+      "main": [
+        [
+          {
+            "node": "Flatten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract Report - Gemini Fallback",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Report - Gemini Fallback": {
+      "main": [
+        [
+          {
+            "node": "Tag Provider: Gemini Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Total Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag Provider: Gemini Fallback": {
+      "main": [
+        [
+          {
+            "node": "Flatten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Total Failure": {
+      "main": [
+        [
+          {
+            "node": "Flatten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "OQMzL2hWmPZpatrg"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "6911d3ae-41f3-4bbe-8c05-550a02686d0c",
+  "tags": [
+    {
+      "name": "Weekly Review Assistant"
+    }
+  ]
+}

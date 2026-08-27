@@ -1,0 +1,246 @@
+{
+  "id": "eBihWPcob5cspZz5",
+  "name": "[Main] Weekly Review",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "id": "wh",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weekly-review-run",
+        "responseMode": "onReceived",
+        "options": {},
+        "authentication": "headerAuth"
+      },
+      "webhookId": "weekly-review-run",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "WZv3PtxFX0KGUYDJ",
+          "name": "Weekly Review Webhook Secret"
+        }
+      }
+    },
+    {
+      "id": "weeklySchedule",
+      "name": "Weekly Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        220
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1"
+            }
+          ]
+        }
+      },
+      "notes": "Runs the review automatically every Monday 07:00 (server time), with no portal status (that requires a manual webhook run pasting portal_status_text). The Webhook trigger stays for on-demand/manual/testing runs."
+    },
+    {
+      "id": "initrun",
+      "name": "Init Run",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const body = ($input.first().json || {}).body || {};\nreturn [{ json: {\n  run_id: 'run_' + Date.now(),\n  started_at: new Date().toISOString(),\n  portal_status_text: body.portal_status_text || '',\n}}];"
+      }
+    },
+    {
+      "id": "callgit",
+      "name": "Call Gather Git Activity",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        100
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "6Ll4mz3dqa139z1S",
+          "mode": "id"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "calln8n",
+      "name": "Call Gather n8n Executions",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        100
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "aJR3EGI3biH4gqID",
+          "mode": "id"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "buildsynthinput",
+      "name": "Build Synth Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const git = $('Call Gather Git Activity').first().json;\nconst n8n = $json;\nconst portal_status_text = $('Init Run').first().json.portal_status_text;\nreturn [{ json: { git, n8n, portal_status_text } }];"
+      }
+    },
+    {
+      "id": "callsynth",
+      "name": "Call Synthesize Report",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        100
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8y4UNDKdOXASRVBQ",
+          "mode": "id"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "callfmt",
+      "name": "Call Format & Deliver",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        100
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "25yFORxZSRH17FPh",
+          "mode": "id"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Init Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Schedule": {
+      "main": [
+        [
+          {
+            "node": "Init Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Run": {
+      "main": [
+        [
+          {
+            "node": "Call Gather Git Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Gather Git Activity": {
+      "main": [
+        [
+          {
+            "node": "Call Gather n8n Executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Gather n8n Executions": {
+      "main": [
+        [
+          {
+            "node": "Build Synth Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Synth Input": {
+      "main": [
+        [
+          {
+            "node": "Call Synthesize Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Synthesize Report": {
+      "main": [
+        [
+          {
+            "node": "Call Format & Deliver",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "OQMzL2hWmPZpatrg"
+  },
+  "staticData": {
+    "node:Weekly Schedule": {
+      "recurrenceRules": []
+    }
+  },
+  "pinData": null,
+  "versionId": "3da72b04-0b6e-4b32-a4e7-0360d7022715",
+  "tags": [
+    {
+      "name": "Weekly Review Assistant"
+    }
+  ]
+}

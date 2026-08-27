@@ -1,0 +1,119 @@
+{
+  "id": "OQMzL2hWmPZpatrg",
+  "name": "[System] Error Handler (Weekly Review Assistant)",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "id": "errtrig",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "buildalert",
+      "name": "Build Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "include": "none",
+        "fields": {
+          "values": [
+            {
+              "name": "workflow_name",
+              "stringValue": "={{ $json.workflow.name }}"
+            },
+            {
+              "name": "workflow_id",
+              "stringValue": "={{ $json.workflow.id }}"
+            },
+            {
+              "name": "failed_node",
+              "stringValue": "={{ $json.execution.lastNodeExecuted }}"
+            },
+            {
+              "name": "error_message",
+              "stringValue": "={{ $json.execution.error.message }}"
+            },
+            {
+              "name": "execution_id",
+              "stringValue": "={{ $json.execution.id }}"
+            },
+            {
+              "name": "execution_url",
+              "stringValue": "={{ $json.execution.url }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "emailalert",
+      "name": "Email Admin Alert",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "subject": "=[Weekly Review Assistant] WORKFLOW ERROR: {{ $json.workflow_name }}",
+        "sendTo": "caysonb8@gmail.com",
+        "message": "=Hello,\n\nAn error occurred in the Weekly Review Assistant automation (personal agent, FlyRank internship project).\n\n--- ERROR DETAILS ---\nWorkflow: {{ $json.workflow_name }}\nWorkflow ID: {{ $json.workflow_id }}\nFailed Node: {{ $json.failed_node }}\nError Message: {{ $json.error_message }}\nTimestamp: {{ $now.toISO() }}\n\n--- ACTION REQUIRED ---\nLog in to n8n at http://localhost:5678 to investigate.\n\nExecution ID: {{ $json.execution_id }}",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "en8v93yVSh7ensbX",
+          "name": "Gmail account"
+        }
+      },
+      "webhookId": "daa80e5b-5001-4ffb-a3b9-cc446c0dd23b"
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Alert": {
+      "main": [
+        [
+          {
+            "node": "Email Admin Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "51d4a250-b4f0-4404-bc66-413dbc05117d",
+  "tags": [
+    {
+      "name": "Weekly Review Assistant"
+    }
+  ]
+}

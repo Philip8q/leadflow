@@ -1,0 +1,59 @@
+{
+  "id": "6Ll4mz3dqa139z1S",
+  "name": "[Sub] Gather Git Activity",
+  "description": null,
+  "active": true,
+  "nodes": [
+    {
+      "id": "trig",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "fetchgit",
+      "name": "Fetch Git Activity",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();\nlet repos = [];\nlet github_ok = true;\nlet error = null;\n\ntry {\n  const repoList = await this.helpers.httpRequest({\n    method: 'GET',\n    url: 'https://api.github.com/users/Philip8q/repos?type=owner&per_page=100',\n    headers: { 'User-Agent': 'weekly-review-assistant', 'Accept': 'application/vnd.github+json' },\n    json: true,\n  });\n\n  const publicRepos = (repoList || []).filter(r => !r.private);\n\n  for (const repo of publicRepos) {\n    try {\n      const commits = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `https://api.github.com/repos/Philip8q/${repo.name}/commits?since=${since}&per_page=100`,\n        headers: { 'User-Agent': 'weekly-review-assistant', 'Accept': 'application/vnd.github+json' },\n        json: true,\n      });\n      repos.push({\n        name: repo.name,\n        commit_count: Array.isArray(commits) ? commits.length : 0,\n        commits: (Array.isArray(commits) ? commits : []).map(c => ({\n          sha: c.sha.slice(0, 7),\n          message: c.commit.message.split('\\n')[0],\n          date: c.commit.author.date,\n        })),\n      });\n    } catch (e) {\n      repos.push({ name: repo.name, commit_count: 0, commits: [], repo_error: e.message });\n    }\n  }\n} catch (e) {\n  github_ok = false;\n  error = e.message;\n}\n\nconst total_commits = repos.reduce((sum, r) => sum + r.commit_count, 0);\nreturn [{ json: { github_ok, error, since, repos, total_commits } }];"
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Fetch Git Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "OQMzL2hWmPZpatrg"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "8eb0fe24-33a5-4ab7-8b10-9e7bb133ab42",
+  "tags": [
+    {
+      "name": "Weekly Review Assistant"
+    }
+  ]
+}
