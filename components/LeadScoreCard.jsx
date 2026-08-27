@@ -36,7 +36,7 @@ export function LeadScoreTool({ part }) {
 
 function ScorePreparing({ input }) {
   return (
-    <div className="w-64 max-w-full animate-pulse rounded-lg border border-black/10 bg-bg p-3">
+    <div className="w-72 max-w-full animate-pulse rounded-lg border border-black/10 bg-bg p-3">
       <div className="mb-2 h-3 w-24 rounded bg-text/15" />
       <div className="mb-1 h-2 w-full rounded bg-text/10" />
       <div className="h-2 w-3/4 rounded bg-text/10" />
@@ -53,7 +53,7 @@ function ScoreRunning({ input }) {
   );
 
   return (
-    <div className="w-64 max-w-full rounded-lg border border-black/10 bg-bg p-3">
+    <div className="w-72 max-w-full rounded-lg border border-black/10 bg-bg p-3">
       <div className="flex items-center gap-2 text-xs font-medium text-text/70">
         <span className="h-3 w-3 animate-spin rounded-full border-2 border-text/20 border-t-main" />
         Scoring this lead&hellip;

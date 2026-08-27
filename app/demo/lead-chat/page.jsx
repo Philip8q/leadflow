@@ -9,14 +9,25 @@ import { LeadScoreTool } from "@/components/LeadScoreCard";
 // (common with fractional scroll positions) shouldn't lose their pin.
 const BOTTOM_THRESHOLD = 48;
 
+// Click-to-fill examples for the empty state -- an onboarding nudge, not
+// just an apology for having nothing to show yet.
+const EXAMPLE_PROMPTS = [
+  "I'm looking to buy a 2-bedroom in the next few months",
+  "I want to rent a 1-bedroom in Kilimani ASAP",
+  "I'm thinking of selling my house in Karen",
+];
+
 function isNearBottom(el) {
   return el.scrollHeight - el.scrollTop - el.clientHeight < BOTTOM_THRESHOLD;
 }
 
 // Parts this UI knows how to render. Anything else (e.g. hidden
 // reasoning-model "thinking" parts) is intentionally skipped, not shown.
+// Whitespace-only text (this model sometimes emits a bare "\n\n\n" right
+// before a tool call) must not pass either -- it renders as a blank,
+// broken-looking bubble otherwise.
 function isRenderablePart(part) {
-  if (part.type === "text") return part.text.length > 0;
+  if (part.type === "text") return part.text.trim().length > 0;
   return part.type === "tool-scoreLead";
 }
 
@@ -26,8 +37,14 @@ export default function LeadChatPage() {
   const [input, setInput] = useState("");
   const [pinnedToBottom, setPinnedToBottom] = useState(true);
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
 
   const busy = status === "submitted" || status === "streaming";
+
+  function fillExample(example) {
+    setInput(example);
+    inputRef.current?.focus();
+  }
 
   // Auto-scroll that respects the user scrolling up: only follow new
   // content while already pinned to the bottom, and release the pin the
@@ -81,13 +98,27 @@ export default function LeadChatPage() {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4"
+          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain p-4"
         >
           {messages.length === 0 && (
-            <p className="m-auto max-w-xs text-center text-sm text-text/50">
-              Say hello to start. Try something like &ldquo;I&apos;m looking
-              to buy a 2-bedroom in the next few months.&rdquo;
-            </p>
+            <div className="m-auto flex max-w-xs flex-col items-center gap-3 text-center">
+              <p className="text-sm text-text/50">
+                No conversation yet &mdash; try one of these to see how it
+                works:
+              </p>
+              <div className="flex flex-col gap-2">
+                {EXAMPLE_PROMPTS.map((example) => (
+                  <button
+                    key={example}
+                    type="button"
+                    onClick={() => fillExample(example)}
+                    className="rounded-full border border-black/10 bg-bg px-3 py-1.5 text-xs text-text/70 hover:border-main/40 hover:text-main"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
 
           {messages.map((message) => {
@@ -144,13 +175,17 @@ export default function LeadChatPage() {
 
           {error && (
             <div className="flex flex-col items-start gap-2 rounded-lg border border-main/30 bg-main/5 px-3 py-2 text-sm text-main">
-              <span>Something went wrong. Please try again.</span>
+              <span>
+                {error.message ||
+                  "Your last message failed to send. Nothing else was lost."}
+              </span>
               <button
                 type="button"
                 onClick={() => regenerate()}
-                className="rounded-md border border-main/40 px-2 py-1 text-xs font-medium hover:bg-main/10"
+                disabled={busy}
+                className="rounded-md border border-main/40 px-2 py-1 text-xs font-medium hover:bg-main/10 disabled:opacity-50"
               >
-                Retry
+                Retry that message
               </button>
             </div>
           )}
@@ -171,6 +206,7 @@ export default function LeadChatPage() {
           className="flex items-end gap-2 border-t border-black/10 p-3"
         >
           <textarea
+            ref={inputRef}
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={(event) => {

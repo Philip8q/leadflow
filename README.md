@@ -54,6 +54,14 @@ organized, actionable sales pipeline.
   | **Input schema** | `{ intent: "buy" \| "sell" \| "rent", timeline: "immediate" \| "weeks" \| "months" \| "browsing", budgetKnown: boolean, contactMethod: "phone" \| "email" \| "whatsapp" \| "none", propertyType: string }` |
   | **Return shape** | `{ score: number (0-100), tier: "Hot" \| "Warm" \| "Cold", breakdown: Array<{ label: string, points: number, max: number, detail: string }>, summary: string }` |
   | **Error case** | Throws if called with essentially no qualifying signal gathered yet — a real rejection, not a simulated one, rendered as a designed error card client-side |
+- **Error, empty, and edge-case handling** — the chat's primary flow is
+  hardened against malformed requests, provider failures, and tool errors
+  (each with its own designed state, not a generic catch-all), plus a
+  click-to-fill empty state and `error.js` boundaries at the root and
+  chat-segment level. Verified by deliberate sabotage (broken model ID,
+  forced tool failure, malformed request body), each reverted immediately
+  after confirming the fix. Full log and screenshots in
+  [`docs/ai-fluency/week-4/ERROR_STATES.md`](./docs/ai-fluency/week-4/ERROR_STATES.md).
 
 ## Planned Features
 
