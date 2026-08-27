@@ -4,6 +4,8 @@ Brief: Design Your Personal Agent
 Author: Philip
 Date: 2026-08-27
 
+**Status: built and live-tested.** See [`WEEKLY_REVIEW_ASSISTANT_BUILD.md`](./WEEKLY_REVIEW_ASSISTANT_BUILD.md) for the actual n8n implementation, real bugs found and fixed, and sample real output.
+
 ## Job to be done
 
 Every week, pull together what actually happened across my active work —
