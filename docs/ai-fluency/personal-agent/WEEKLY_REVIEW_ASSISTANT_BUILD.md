@@ -161,7 +161,15 @@ production Monday-morning schedule trigger to fire on its own — this was
 tested via the manual webhook path throughout, not yet observed running
 unattended on its actual cron schedule.
 
+## Raw run capture
+
+The full n8n execution JSON for the successful end-to-end run (execution
+`#586`, 2026-08-28, all 7 nodes, Gemini fallback firing for real) is at
+[`raw-run-capture.json`](./raw-run-capture.json) — 207 KB, every node's
+input/output, timestamps, and the complete synthesized report.
+
 ## Links
 
 - [Design spec](./WEEKLY_REVIEW_ASSISTANT_SPEC.md)
 - [Exported workflow JSONs](./n8n-workflows/)
+- [Raw run capture](./raw-run-capture.json)
