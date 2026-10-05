@@ -7,7 +7,7 @@ export default function DemoPage() {
         <h1 className="font-heading text-3xl font-semibold text-main">
           Lead Notification Preferences
         </h1>
-        <p className="text-text/60">
+        <p className="text-text/80">
           The real, working feature from LeadFlow&apos;s FE-02 build — not a
           mockup.
         </p>

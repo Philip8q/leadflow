@@ -10,7 +10,7 @@ export default function AboutPage() {
 
       <section className="flex flex-col gap-3">
         <h2 className="font-heading text-xl font-semibold">Bio</h2>
-        <p className="text-text/70">
+        <p className="text-text/80">
           Front-end engineer intern at FlyRank, based in Nairobi. n8n
           automation is prior background — front-end engineering is the
           focus now.
@@ -30,7 +30,7 @@ export default function AboutPage() {
       <section className="flex flex-col gap-4 border-t border-black/10 pt-10 text-center">
         <Link
           href="/contact"
-          className="mx-auto w-fit rounded-md bg-main px-5 py-3 font-body font-medium text-bg hover:opacity-90"
+          className="mx-auto w-fit rounded-md bg-main px-5 py-3 font-body font-medium text-bg hover:opacity-90 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
         >
           Book a call
         </Link>

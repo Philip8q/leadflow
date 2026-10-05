@@ -98,7 +98,7 @@ function SettingsForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       <FormField
         id="displayName"
         label="Display name"
@@ -108,15 +108,18 @@ function SettingsForm() {
         error={errors.displayName}
       />
 
-      <div>
+      <div className="flex items-center gap-2">
         <input
           id="emailNotifications"
           name="emailNotifications"
           type="checkbox"
           checked={values.emailNotifications}
           onChange={handleChange}
+          className="h-4 w-4 rounded border-black/20 text-main focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-1"
         />
-        <label htmlFor="emailNotifications">Email notifications</label>
+        <label htmlFor="emailNotifications" className="text-sm font-medium text-text">
+          Email notifications
+        </label>
       </div>
 
       <FormField
@@ -142,9 +145,18 @@ function SettingsForm() {
         error={errors.alertThreshold}
       />
 
-      <button type="submit">Save settings</button>
+      <button
+        type="submit"
+        className="w-fit rounded-md bg-main px-4 py-2 font-body text-sm font-medium text-bg hover:opacity-90 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
+      >
+        Save settings
+      </button>
 
-      {saved && <p role="status">Settings saved.</p>}
+      {saved && (
+        <p role="status" className="text-sm font-medium text-main">
+          Settings saved.
+        </p>
+      )}
     </form>
   );
 }

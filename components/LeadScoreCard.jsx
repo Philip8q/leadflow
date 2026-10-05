@@ -41,7 +41,7 @@ function ScorePreparing({ input }) {
       <div className="mb-1 h-2 w-full rounded bg-text/10" />
       <div className="h-2 w-3/4 rounded bg-text/10" />
       {input?.propertyType ? (
-        <p className="mt-2 truncate text-xs text-text/40">{input.propertyType}</p>
+        <p className="mt-2 truncate text-xs font-medium text-text/80">{input.propertyType}</p>
       ) : null}
     </div>
   );
@@ -54,8 +54,8 @@ function ScoreRunning({ input }) {
 
   return (
     <div className="w-72 max-w-full rounded-lg border border-black/10 bg-bg p-3">
-      <div className="flex items-center gap-2 text-xs font-medium text-text/70">
-        <span className="h-3 w-3 animate-spin rounded-full border-2 border-text/20 border-t-main" />
+      <div role="status" aria-live="polite" className="flex items-center gap-2 text-xs font-medium text-text/85">
+        <span aria-hidden="true" className="h-3 w-3 animate-spin rounded-full border-2 border-text/20 border-t-main" />
         Scoring this lead&hellip;
       </div>
       {tags.length > 0 && (
@@ -63,7 +63,7 @@ function ScoreRunning({ input }) {
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full bg-text/5 px-2 py-0.5 text-[11px] text-text/60"
+              className="rounded-full bg-text/5 px-2 py-0.5 text-[11px] font-medium text-text/85"
             >
               {tag}
             </span>
@@ -89,22 +89,29 @@ function ScoreResult({ output }) {
         </span>
         <span className="font-heading text-2xl font-semibold text-text">
           {output.score}
-          <span className="text-sm font-normal text-text/40">/100</span>
+          <span className="text-sm font-normal text-text/75">/100</span>
         </span>
       </div>
 
-      <p className="mt-2 text-xs text-text/60">{output.summary}</p>
+      <p className="mt-2 text-xs text-text/80">{output.summary}</p>
 
       <div className="mt-3 space-y-2">
         {output.breakdown.map((item) => (
           <div key={item.label}>
-            <div className="flex items-center justify-between text-[11px] text-text/60">
+            <div className="flex items-center justify-between text-[11px] font-medium text-text/85">
               <span>{item.label}</span>
               <span>
                 {item.points}/{item.max} &middot; {item.detail}
               </span>
             </div>
-            <div className="mt-0.5 h-1.5 w-full overflow-hidden rounded-full bg-text/10">
+            <div
+              role="progressbar"
+              aria-valuenow={item.points}
+              aria-valuemin={0}
+              aria-valuemax={item.max}
+              aria-label={`${item.label} score: ${item.points} out of ${item.max}`}
+              className="mt-0.5 h-1.5 w-full overflow-hidden rounded-full bg-text/10"
+            >
               <div
                 className={`h-full rounded-full ${style.bar}`}
                 style={{ width: `${(item.points / item.max) * 100}%` }}
@@ -124,7 +131,7 @@ function ScoreError({ errorText }) {
         <span aria-hidden="true">&#9888;</span>
         Couldn&apos;t score this lead yet
       </div>
-      <p className="mt-1 text-xs text-text/60">
+      <p className="mt-1 text-xs text-text/80">
         {errorText || "Something went wrong scoring this lead."}
       </p>
     </div>

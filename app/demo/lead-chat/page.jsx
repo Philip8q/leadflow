@@ -88,7 +88,7 @@ export default function LeadChatPage() {
         <h1 className="font-heading text-3xl font-semibold text-main">
           Lead Qualification Chat
         </h1>
-        <p className="text-text/60">
+        <p className="text-text/80">
           A live demo of LeadFlow&apos;s AI qualification widget &mdash; talk
           to it like you&apos;re a prospective buyer or seller.
         </p>
@@ -98,11 +98,15 @@ export default function LeadChatPage() {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+          aria-label="Conversation messages"
           className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain p-4"
         >
           {messages.length === 0 && (
             <div className="m-auto flex max-w-xs flex-col items-center gap-3 text-center">
-              <p className="text-sm text-text/50">
+              <p className="text-sm font-medium text-text/80">
                 No conversation yet &mdash; try one of these to see how it
                 works:
               </p>
@@ -112,7 +116,8 @@ export default function LeadChatPage() {
                     key={example}
                     type="button"
                     onClick={() => fillExample(example)}
-                    className="rounded-full border border-black/10 bg-bg px-3 py-1.5 text-xs text-text/70 hover:border-main/40 hover:text-main"
+                    aria-label={`Prompt starter: ${example}`}
+                    className="rounded-full border border-black/15 bg-bg px-3 py-1.5 text-xs font-medium text-text/85 hover:border-main/40 hover:text-main focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
                   >
                     {example}
                   </button>
@@ -142,6 +147,8 @@ export default function LeadChatPage() {
                     return (
                       <div
                         key={`${message.id}-text-${index}`}
+                        aria-live={isUser ? "off" : "polite"}
+                        aria-atomic="false"
                         className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
                           isUser
                             ? "bg-main text-bg"
@@ -174,7 +181,11 @@ export default function LeadChatPage() {
           )}
 
           {error && (
-            <div className="flex flex-col items-start gap-2 rounded-lg border border-main/30 bg-main/5 px-3 py-2 text-sm text-main">
+            <div
+              role="alert"
+              aria-live="assertive"
+              className="flex flex-col items-start gap-2 rounded-lg border border-main/30 bg-main/5 px-3 py-2 text-sm text-main"
+            >
               <span>
                 {error.message ||
                   "Your last message failed to send. Nothing else was lost."}
@@ -183,7 +194,7 @@ export default function LeadChatPage() {
                 type="button"
                 onClick={() => regenerate()}
                 disabled={busy}
-                className="rounded-md border border-main/40 px-2 py-1 text-xs font-medium hover:bg-main/10 disabled:opacity-50"
+                className="rounded-md border border-main/40 px-2 py-1 text-xs font-medium hover:bg-main/10 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
               >
                 Retry that message
               </button>
@@ -195,7 +206,8 @@ export default function LeadChatPage() {
           <button
             type="button"
             onClick={scrollToLatest}
-            className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-full bg-main px-3 py-1 text-xs font-medium text-bg shadow-md hover:opacity-90"
+            aria-label="Jump to latest messages"
+            className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-full bg-main px-3 py-1.5 text-xs font-medium text-bg shadow-md hover:opacity-90 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
           >
             Jump to latest
           </button>
@@ -203,9 +215,14 @@ export default function LeadChatPage() {
 
         <form
           onSubmit={handleSubmit}
+          aria-label="Send a message"
           className="flex items-end gap-2 border-t border-black/10 p-3"
         >
+          <label htmlFor="chat-message-input" className="sr-only">
+            Type a message
+          </label>
           <textarea
+            id="chat-message-input"
             ref={inputRef}
             value={input}
             onChange={(event) => setInput(event.target.value)}
@@ -216,6 +233,7 @@ export default function LeadChatPage() {
               }
             }}
             placeholder="Type a message..."
+            aria-label="Type a message..."
             rows={1}
             disabled={busy}
             className="min-h-[2.5rem] flex-1 resize-none rounded-md border border-black/10 px-3 py-2 text-base text-text outline-none focus-visible:ring-2 focus-visible:ring-main disabled:opacity-60"
@@ -224,7 +242,8 @@ export default function LeadChatPage() {
             <button
               type="button"
               onClick={stop}
-              className="rounded-md bg-text px-4 py-2 font-body text-sm font-medium text-bg hover:opacity-90"
+              aria-label="Stop generating response"
+              className="rounded-md bg-text px-4 py-2 font-body text-sm font-medium text-bg hover:opacity-90 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
             >
               Stop
             </button>
@@ -232,7 +251,8 @@ export default function LeadChatPage() {
             <button
               type="submit"
               disabled={!input.trim()}
-              className="rounded-md bg-main px-4 py-2 font-body text-sm font-medium text-bg hover:opacity-90 disabled:opacity-40"
+              aria-label="Send message"
+              className="rounded-md bg-main px-4 py-2 font-body text-sm font-medium text-bg hover:opacity-90 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
             >
               Send
             </button>
@@ -245,10 +265,16 @@ export default function LeadChatPage() {
 
 function ThinkingIndicator() {
   return (
-    <span className="inline-flex items-center gap-1" aria-label="Thinking">
-      <span className="motion-safe:animate-bounce h-1.5 w-1.5 rounded-full bg-text/40 [animation-delay:-0.3s]" />
-      <span className="motion-safe:animate-bounce h-1.5 w-1.5 rounded-full bg-text/40 [animation-delay:-0.15s]" />
-      <span className="motion-safe:animate-bounce h-1.5 w-1.5 rounded-full bg-text/40" />
+    <span
+      role="status"
+      aria-live="polite"
+      aria-label="Thinking"
+      className="inline-flex items-center gap-1.5"
+    >
+      <span className="sr-only">Thinking...</span>
+      <span aria-hidden="true" className="motion-safe:animate-bounce h-1.5 w-1.5 rounded-full bg-text/60 [animation-delay:-0.3s]" />
+      <span aria-hidden="true" className="motion-safe:animate-bounce h-1.5 w-1.5 rounded-full bg-text/60 [animation-delay:-0.15s]" />
+      <span aria-hidden="true" className="motion-safe:animate-bounce h-1.5 w-1.5 rounded-full bg-text/60" />
     </span>
   );
 }

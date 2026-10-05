@@ -23,9 +23,12 @@ export default function CaseStudyPage() {
       <section className="flex flex-col gap-3">
         <h2 className="font-heading text-xl font-semibold">Real evidence</h2>
         <Placeholder label="Embedded screenshots" />
-        <p className="text-sm text-text/60">
+        <p className="text-sm text-text/80">
           See the working feature now:{" "}
-          <Link href="/demo" className="text-main underline">
+          <Link
+            href="/demo"
+            className="text-main underline rounded-sm focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
+          >
             live settings form demo
           </Link>
           .
@@ -42,7 +45,7 @@ export default function CaseStudyPage() {
       <section className="flex flex-col gap-4 border-t border-black/10 pt-10 text-center">
         <Link
           href="/contact"
-          className="mx-auto w-fit rounded-md bg-main px-5 py-3 font-body font-medium text-bg hover:opacity-90"
+          className="mx-auto w-fit rounded-md bg-main px-5 py-3 font-body font-medium text-bg hover:opacity-90 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
         >
           Book a call to see it
         </Link>

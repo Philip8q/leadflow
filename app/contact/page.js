@@ -7,7 +7,7 @@ export default function ContactPage() {
         Book a call
       </h1>
 
-      <p className="text-text/70">
+      <p className="text-text/80">
         I build LeadFlow so small Kenyan real estate businesses can find
         buyers without burning $1,000 a month on Meta ads.
       </p>

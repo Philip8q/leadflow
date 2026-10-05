@@ -3,6 +3,8 @@ const nextConfig = {
   turbopack: {
     root: import.meta.dirname,
   },
+  compress: true,
+  poweredByHeader: false,
 };
 
 export default nextConfig;
