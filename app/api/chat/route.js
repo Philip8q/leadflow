@@ -49,6 +49,49 @@ export async function POST(req) {
     );
   }
 
+  // Production hygiene & credit abuse prevention: turn limit
+  const MAX_MESSAGES = 25;
+  if (messages.length > MAX_MESSAGES) {
+    return new Response(
+      JSON.stringify({
+        error: `Conversation turn limit reached (${MAX_MESSAGES} messages). Please restart the chat.`,
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  // Production hygiene & payload guard: max characters per message and total payload
+  const MAX_CHARS_PER_MESSAGE = 1500;
+  let totalChars = 0;
+  for (const msg of messages) {
+    const textContent =
+      typeof msg.content === "string"
+        ? msg.content
+        : Array.isArray(msg.parts)
+          ? msg.parts.map((p) => p.text || "").join("")
+          : "";
+    totalChars += textContent.length;
+
+    if (msg.role === "user" && textContent.length > MAX_CHARS_PER_MESSAGE) {
+      return new Response(
+        JSON.stringify({
+          error: `Message exceeds maximum allowed length of ${MAX_CHARS_PER_MESSAGE} characters.`,
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  }
+
+  const MAX_TOTAL_CHARS = 15000;
+  if (totalChars > MAX_TOTAL_CHARS) {
+    return new Response(
+      JSON.stringify({
+        error: `Total conversation exceeds allowed character limit (${MAX_TOTAL_CHARS} characters). Please restart the chat.`,
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
   const result = streamText({
     model: chatModel,
     instructions: CHAT_SYSTEM_PROMPT,
