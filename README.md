@@ -313,17 +313,6 @@ leadflow/
 
 ---
 
-## Capstone & Final Review Documentation
-
-The complete documentation package for the FlyRank AI Engineering Internship graduation and final review checkpoint is available directly in this repository:
-
-- **[Master Deliverables Index](./docs/MASTER_INDEX.md)**: Full inventory of weekly milestones, project links, and live production deployments.
-- **[Internship Retrospective: A Letter to Week 1](./docs/RETROSPECTIVE.md)**: 685-word reflective essay detailing architectural shifts, transferable learnings, and what to build next.
-- **[Live Demo Walkthrough Script (3m 45s)](./docs/DEMO_SCRIPT.md)**: Timed, slide-free screen recording script explaining live streaming, deterministic scoring tool decisions, and in-memory session trade-offs.
-- **[Verified Hours Log (168.0 Hours)](./docs/HOURS_LOG.md)**: Authoritative weekly hours ledger matching GitHub commits and production releases.
-
----
-
 ## License
 
 MIT © 2026 Philip Omondi. Built under the FlyRank AI Engineering Internship Program.
