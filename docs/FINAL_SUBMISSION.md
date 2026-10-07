@@ -16,6 +16,7 @@
 ## 2. GitHub Repositories & Documentation
 - **LeadFlow Capstone Codebase & Production README**: [https://github.com/Philip8q/leadflow](https://github.com/Philip8q/leadflow)
 - **Developer Portfolio Codebase**: [https://github.com/Philip8q/portfolio](https://github.com/Philip8q/portfolio)
+- **Business Value & Client Integration Architecture**: [Business Value & Client Integration Guide](./BUSINESS_VALUE_AND_INTEGRATION_GUIDE.md)
 
 ---
 
