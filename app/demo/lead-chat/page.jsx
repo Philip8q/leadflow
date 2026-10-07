@@ -2,6 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { LeadScoreTool } from "@/components/LeadScoreCard";
 
 // How close to the bottom (in px) still counts as "at the bottom" for
@@ -84,13 +85,32 @@ export default function LeadChatPage() {
 
   return (
     <div className="flex h-[calc(100dvh-8rem)] flex-col gap-4">
+      {/* Breadcrumb Navigation & Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text/60">
+          <Link href="/" className="hover:text-main">Home</Link>
+          <span>/</span>
+          <span className="text-text font-medium">AI Qualification Chat</span>
+        </nav>
+        <Link
+          href="/demo"
+          className="text-xs text-main hover:underline flex items-center gap-1 font-medium"
+        >
+          Configure Alert Thresholds →
+        </Link>
+      </div>
+
       <div>
-        <h1 className="font-heading text-3xl font-semibold text-main">
-          Lead Qualification Chat
-        </h1>
-        <p className="text-text/80">
-          A live demo of LeadFlow&apos;s AI qualification widget &mdash; talk
-          to it like you&apos;re a prospective buyer or seller.
+        <div className="flex items-center gap-3">
+          <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-main">
+            Lead Qualification Chat
+          </h1>
+          <span className="text-xs bg-green-100 text-green-800 px-2.5 py-0.5 rounded-full font-medium border border-green-200">
+            Live Stream
+          </span>
+        </div>
+        <p className="text-sm text-text/80 mt-1">
+          Autonomous discovery and triage engine. Talk to the assistant as a prospective buyer, seller, or tenant to test real-time scoring.
         </p>
       </div>
 
