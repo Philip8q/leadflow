@@ -5,12 +5,6 @@ export default function HomePage() {
     <div className="flex flex-col gap-16 py-4">
       {/* Hero Section */}
       <section className="flex flex-col gap-6 text-left sm:text-left">
-        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-main/20 bg-main/5 px-3.5 py-1 text-xs font-medium text-main">
-          <span>Production AI Agent</span>
-          <span>•</span>
-          <span>Next.js 16 + Vercel AI SDK</span>
-        </div>
-
         <h1 className="font-heading text-4xl font-semibold leading-tight text-main sm:text-5xl lg:text-6xl">
           Automate Inbound Lead Qualification & Scoring.
         </h1>
