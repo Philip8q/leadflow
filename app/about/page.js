@@ -58,21 +58,19 @@ export default function AboutPage() {
         <div className="group rounded-xl border border-black/10 bg-white p-6 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
           <div>
             <h3 className="font-heading text-lg font-semibold text-main mb-2">
-              GitHub Repositories
+              Technical Architecture
             </h3>
             <p className="text-sm text-text/80">
-              Review clean Conventional Commits history, Vitest unit test suites, and open-source Next.js App Router implementations.
+              Read the deep-dive engineering case study detailing deterministic tool contracts, Zod schemas, and streaming edge guards.
             </p>
           </div>
-          <a
-            href="https://github.com/Philip8q/leadflow"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/case-study"
             className="text-sm font-semibold text-main hover:underline mt-4 inline-flex items-center gap-1"
           >
-            <span>Inspect GitHub Codebase</span>
+            <span>Read Architecture Case Study</span>
             <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
-          </a>
+          </Link>
         </div>
       </section>
 
