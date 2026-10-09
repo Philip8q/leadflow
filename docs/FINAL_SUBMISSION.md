@@ -22,7 +22,7 @@
 
 ## 3. Media & Social Deliverables
 - **Demo Video Walkthrough (3-5 min)**: [Watch 3m 45s Walkthrough on Google Drive](https://drive.google.com/file/d/13vnOgchUn8CSRqWzf43iIj4FzR2zcPod/view?usp=sharing)
-- **Build-in-Public Post URL**: `[PASTE YOUR LINKEDIN OR X POST URL HERE]`
+
 
 ---
 
