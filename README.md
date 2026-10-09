@@ -15,6 +15,7 @@
 
 - **Production Application**: [https://leadflow-ten-sage.vercel.app](https://leadflow-ten-sage.vercel.app)
 - **Live Lead Qualification Chat**: [https://leadflow-ten-sage.vercel.app/demo/lead-chat](https://leadflow-ten-sage.vercel.app/demo/lead-chat)
+- **Recorded Demo Video (Walkthrough)**: [Watch 3m 45s Live Screen Run on Google Drive](https://drive.google.com/file/d/13vnOgchUn8CSRqWzf43iIj4FzR2zcPod/view?usp=sharing)
 - **Lead Settings & Notification Controls**: [https://leadflow-ten-sage.vercel.app/demo](https://leadflow-ten-sage.vercel.app/demo)
 - **Developer Portfolio**: [https://philipomondi.netlify.app](https://philipomondi.netlify.app)
 - **FlyRank Credential Verification**: [https://internship.flyrank.ai/verify?id=FR-2026-PO&first_name=Philip](https://internship.flyrank.ai/verify?id=FR-2026-PO&first_name=Philip)
