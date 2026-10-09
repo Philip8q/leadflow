@@ -23,13 +23,9 @@ function Nav() {
         <div className="flex items-center gap-8">
           <Link
             href="/"
-            className="font-heading text-xl font-semibold text-main rounded focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2 flex items-center gap-2.5"
+            className="font-heading text-xl font-semibold text-main rounded focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
           >
-            <span>LeadFlow</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/80">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-              Operational
-            </span>
+            LeadFlow
           </Link>
         </div>
 

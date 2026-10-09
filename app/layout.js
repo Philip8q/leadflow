@@ -37,36 +37,9 @@ export default function RootLayout({ children }) {
           {children}
         </main>
         <footer className="border-t border-black/10 bg-bg mt-auto">
-          <div className="mx-auto max-w-5xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text/60">
-            <div className="flex items-center gap-2">
-              <span className="font-heading font-semibold text-text/80 text-sm">LeadFlow</span>
-              <span>·</span>
-              <span>Autonomous Inbound Lead Qualification Engine</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <a
-                href="https://github.com/Philip8q/leadflow"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-main transition-colors"
-              >
-                GitHub
-              </a>
-              <span>·</span>
-              <a
-                href="https://philipomondi.netlify.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-main transition-colors"
-              >
-                Portfolio
-              </a>
-              <span>·</span>
-              <span className="inline-flex items-center gap-1 text-emerald-800 font-medium">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                100% WCAG 2.1 AA
-              </span>
-            </div>
+          <div className="mx-auto max-w-5xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-text/60">
+            <span className="font-heading font-semibold text-text/80 text-sm">LeadFlow</span>
+            <span>Autonomous Inbound Lead Qualification Engine</span>
           </div>
         </footer>
       </body>
