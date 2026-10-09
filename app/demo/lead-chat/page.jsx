@@ -84,7 +84,7 @@ export default function LeadChatPage() {
     !lastMessage.parts.some(isRenderablePart);
 
   return (
-    <div className="flex h-[calc(100dvh-8rem)] flex-col gap-4">
+    <div className="flex min-h-[600px] h-[calc(100vh-12rem)] flex-col gap-4">
       {/* Breadcrumb Navigation & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text/60">
@@ -126,29 +126,47 @@ export default function LeadChatPage() {
           className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain p-4"
         >
           {messages.length === 0 && (
-            <div className="m-auto flex w-full max-w-sm flex-col items-center gap-4 text-center p-2">
-              <div className="h-10 w-10 rounded-full bg-main/10 flex items-center justify-center text-main">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
+            <div className="m-auto flex w-full max-w-lg flex-col items-center gap-4 text-center p-4">
+              <div className="h-12 w-12 rounded-2xl bg-main/10 flex items-center justify-center text-main shadow-2xs">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v8.018z" />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-text/80">
-                No conversation yet &mdash; try one of these to see how it
-                works:
-              </p>
-              <div className="flex w-full flex-col gap-2">
-                {EXAMPLE_PROMPTS.map((example) => (
-                  <button
-                    key={example}
-                    type="button"
-                    onClick={() => fillExample(example)}
-                    aria-label={`Prompt starter: ${example}`}
-                    className="group flex w-full items-center justify-between rounded-lg border border-black/10 bg-bg/60 px-3.5 py-2 text-left text-xs font-medium text-text/85 hover:border-main/40 hover:bg-white hover:text-main hover:shadow-xs transition-all duration-150 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
-                  >
-                    <span>{example}</span>
-                    <span className="text-text/30 group-hover:text-main group-hover:translate-x-0.5 transition-all">→</span>
-                  </button>
-                ))}
+
+              <div>
+                <h2 className="font-heading text-lg font-semibold text-text">
+                  LeadFlow Inbound Intake Advisor
+                </h2>
+                <p className="text-xs text-text/70 mt-1 max-w-md">
+                  No conversation yet &mdash; try one of these to see how it works:
+                </p>
+              </div>
+
+              <div className="flex w-full flex-col gap-2.5 text-left">
+                {EXAMPLE_PROMPTS.map((example, idx) => {
+                  const tag = idx === 0 ? "BUYER" : idx === 1 ? "TENANT" : "SELLER";
+                  return (
+                    <button
+                      key={example}
+                      type="button"
+                      onClick={() => fillExample(example)}
+                      aria-label={`Prompt starter: ${example}`}
+                      className="group flex w-full items-center justify-between gap-3 rounded-xl border border-black/10 bg-bg/50 px-4 py-3 text-left hover:border-main/50 hover:bg-white hover:shadow-xs transition-all duration-150 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="shrink-0 rounded-md bg-main/10 px-2 py-0.5 text-[10px] font-bold tracking-wider text-main font-mono">
+                          {tag}
+                        </span>
+                        <span className="text-xs font-medium text-text/85 truncate group-hover:text-main transition-colors">
+                          {example}
+                        </span>
+                      </div>
+                      <span className="text-text/30 group-hover:text-main group-hover:translate-x-0.5 transition-all text-xs font-bold shrink-0">
+                        →
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}

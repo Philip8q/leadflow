@@ -18,7 +18,7 @@ export default function HomePage() {
             href="/demo/lead-chat"
             className="inline-flex items-center justify-center rounded-lg bg-main px-6 py-3.5 font-body font-semibold text-bg shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
           >
-            Launch Live AI Qualification Demo →
+            Launch Qualification Demo →
           </Link>
           <Link
             href="/demo"
@@ -52,7 +52,7 @@ export default function HomePage() {
         <div className="group flex flex-col gap-3 rounded-xl border border-black/10 bg-white p-6 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
           <div className="w-10 h-10 rounded-lg bg-main/10 flex items-center justify-center text-main">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125-1.125V4.125z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
             </svg>
           </div>
           <h3 className="font-heading text-xl font-semibold text-text">
@@ -109,16 +109,23 @@ export default function HomePage() {
       <section className="flex flex-col gap-4 border-t border-black/10 pt-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="rounded bg-black/5 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-text/70">
+                Architecture Brief
+              </span>
+              <span className="text-xs text-text/40">·</span>
+              <span className="text-xs text-text/60">Zod Tool Contract</span>
+            </div>
             <h2 className="font-heading text-2xl font-semibold text-text">
               Engineering Architecture & Case Study
             </h2>
-            <p className="text-sm text-text/75 mt-1">
-              Deep dive into how we decoupled conversational entity extraction from deterministic scoring.
+            <p className="text-sm text-text/75 mt-1 max-w-xl">
+              Deep dive into how we decoupled conversational entity extraction from deterministic scoring to eliminate model hallucinations.
             </p>
           </div>
           <Link
             href="/case-study"
-            className="group inline-flex items-center gap-1 text-sm font-semibold text-main hover:underline"
+            className="group inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-main hover:underline"
           >
             <span>Read Full Case Study</span>
             <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
