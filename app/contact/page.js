@@ -22,7 +22,7 @@ export default function ContactPage() {
 
       {/* Direct Contact Cards */}
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-black/10 pt-8">
-        <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm flex flex-col justify-between">
+        <div className="group rounded-xl border border-black/10 bg-white p-6 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
           <div>
             <h2 className="font-heading text-lg font-semibold text-main mb-2">
               Direct Message
@@ -41,7 +41,7 @@ export default function ContactPage() {
           </a>
         </div>
 
-        <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm flex flex-col justify-between">
+        <div className="group rounded-xl border border-black/10 bg-white p-6 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
           <div>
             <h2 className="font-heading text-lg font-semibold text-main mb-2">
               Test Live Qualification
@@ -52,7 +52,7 @@ export default function ContactPage() {
           </div>
           <Link
             href="/demo/lead-chat"
-            className="inline-flex items-center justify-center rounded-lg border border-black/20 bg-white px-4 py-2.5 text-sm font-medium text-text hover:bg-black/5 transition-colors mt-4"
+            className="inline-flex items-center justify-center rounded-lg border border-black/20 bg-white px-4 py-2.5 text-sm font-medium text-text hover:bg-black/5 hover:border-black/30 transition-all mt-4"
           >
             Launch AI Chat Demo →
           </Link>

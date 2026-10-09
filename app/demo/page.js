@@ -20,10 +20,10 @@ export default function DemoPage() {
         </p>
       </div>
 
-      {/* Connected AI Chat Callout Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-main/20 bg-main/5 p-5">
+      {/* Connected AI Chat Callout Card */}
+      <div className="relative overflow-hidden rounded-xl border border-black/10 bg-white p-5 shadow-xs before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-main flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-heading text-lg font-semibold text-main">
+          <h2 className="font-heading text-lg font-semibold text-text">
             Test the Inbound AI Intake Agent
           </h2>
           <p className="text-sm text-text/80">
@@ -32,14 +32,14 @@ export default function DemoPage() {
         </div>
         <Link
           href="/demo/lead-chat"
-          className="inline-flex shrink-0 items-center justify-center rounded-md bg-main px-4 py-2 text-sm font-medium text-bg hover:opacity-90 focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
+          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-main px-4 py-2 text-sm font-semibold text-bg hover:opacity-90 transition-opacity focus-visible:outline-2 focus-visible:outline-main focus-visible:outline-offset-2"
         >
           Open AI Lead Chat →
         </Link>
       </div>
 
       {/* Settings Form Container */}
-      <div className="max-w-xl rounded-xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
+      <div className="max-w-xl rounded-xl border border-black/10 bg-white p-6 shadow-xs sm:p-8">
         <div className="mb-6 border-b border-black/10 pb-4">
           <h3 className="font-heading text-lg font-semibold text-text">
             Notification Rules

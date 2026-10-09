@@ -35,7 +35,7 @@ export default function AboutPage() {
 
       {/* Technical Portfolio & Verified Links */}
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-black/10 pt-8">
-        <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm flex flex-col justify-between">
+        <div className="group rounded-xl border border-black/10 bg-white p-6 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
           <div>
             <h3 className="font-heading text-lg font-semibold text-main mb-2">
               Developer Portfolio
@@ -50,11 +50,12 @@ export default function AboutPage() {
             rel="noopener noreferrer"
             className="text-sm font-semibold text-main hover:underline mt-4 inline-flex items-center gap-1"
           >
-            Visit philipomondi.netlify.app →
+            <span>Visit philipomondi.netlify.app</span>
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
           </a>
         </div>
 
-        <div className="rounded-xl border border-black/10 bg-white p-6 shadow-sm flex flex-col justify-between">
+        <div className="group rounded-xl border border-black/10 bg-white p-6 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
           <div>
             <h3 className="font-heading text-lg font-semibold text-main mb-2">
               GitHub Repositories
@@ -69,15 +70,16 @@ export default function AboutPage() {
             rel="noopener noreferrer"
             className="text-sm font-semibold text-main hover:underline mt-4 inline-flex items-center gap-1"
           >
-            Inspect GitHub Codebase →
+            <span>Inspect GitHub Codebase</span>
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
           </a>
         </div>
       </section>
 
       {/* Verification Badge Callout */}
-      <section className="rounded-xl border border-main/20 bg-main/5 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <section className="relative overflow-hidden rounded-xl border border-black/10 bg-white p-6 shadow-xs before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-main flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="font-heading font-semibold text-main">
+          <h3 className="font-heading font-semibold text-text">
             FlyRank AI Engineering Graduate
           </h3>
           <p className="text-xs text-text/80 mt-1">
@@ -88,7 +90,7 @@ export default function AboutPage() {
           href="https://internship.flyrank.ai/verify?id=FR-2026-PO&first_name=Philip"
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-md bg-main px-4 py-2 text-xs font-semibold text-bg hover:opacity-90 shrink-0"
+          className="rounded-lg bg-main px-4 py-2 text-xs font-semibold text-bg hover:opacity-90 transition-opacity shrink-0"
         >
           Verify Credential
         </a>

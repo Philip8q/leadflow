@@ -45,15 +45,15 @@ export default function CaseStudyPage() {
           To solve score hallucination, LeadFlow establishes a strict separation of concerns:
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
-          <div className="rounded-xl border border-black/10 bg-white p-5">
+          <div className="group rounded-xl border border-black/10 bg-white p-5 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
             <h3 className="font-heading font-semibold text-main mb-2">What the LLM Does</h3>
-            <p className="text-sm text-text/80">
+            <p className="text-sm text-text/80 leading-relaxed">
               Natural language dialogue, conversational rapport, polite inquiry probing, and extracting structured parameters (intent, timeline, budget certainty, contact method).
             </p>
           </div>
-          <div className="rounded-xl border border-black/10 bg-white p-5">
+          <div className="group rounded-xl border border-black/10 bg-white p-5 shadow-xs hover:border-black/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
             <h3 className="font-heading font-semibold text-main mb-2">What Deterministic Code Does</h3>
-            <p className="text-sm text-text/80">
+            <p className="text-sm text-text/80 leading-relaxed">
               Executes the <code className="bg-black/5 px-1 rounded font-mono text-xs">scoreLead</code> tool via Zod schemas. Calculates mathematical points, enforces business rubrics, and assigns Hot, Warm, or Cold tiers.
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function CaseStudyPage() {
       </section>
 
       {/* Section 4: Live Verification CTA */}
-      <section className="rounded-2xl border border-black/10 bg-white p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+      <section className="relative overflow-hidden rounded-2xl border border-black/10 bg-white p-8 shadow-xs before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-main flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
           <h2 className="font-heading text-xl font-semibold text-text">
             Test the Architecture in Production
@@ -98,7 +98,7 @@ export default function CaseStudyPage() {
           </Link>
           <Link
             href="/demo"
-            className="rounded-lg border border-black/20 bg-white px-5 py-2.5 text-sm font-medium text-text hover:bg-black/5"
+            className="rounded-lg border border-black/20 bg-white px-5 py-2.5 text-sm font-medium text-text hover:bg-black/5 hover:border-black/30 transition-all"
           >
             Alert Settings
           </Link>
