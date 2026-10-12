@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Philip Omondi//FlyRank Capstone//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:20261019T060000Z-weekly-review-dashboard-update@philipomondi.netlify.app
+DTSTAMP:20261012T091500Z
+DTSTART:20261019T060000Z
+DTEND:20261019T070000Z
+SUMMARY:FlyRank Habit: Deploy Weekly Review Assistant Web Dashboard to Portfolio
+DESCRIPTION:Deploy Weekly Review Assistant production web dashboard to portfolio. Update liveUrl in src/data/projects.js and publish live via Netlify. Reusing Week 2 three-beat structure. AI workspace preserved in C:\\Users\\ADMIN\\Desktop\\flyrank intern.
+LOCATION:https://philipomondi.netlify.app/#projects
+STATUS:CONFIRMED
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Nudge: Deploy Weekly Review Assistant Dashboard to philipomondi.netlify.app
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

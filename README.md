@@ -19,6 +19,7 @@
 - **Lead Settings & Notification Controls**: [https://leadflow-ten-sage.vercel.app/demo](https://leadflow-ten-sage.vercel.app/demo)
 - **Developer Portfolio**: [https://philipomondi.netlify.app](https://philipomondi.netlify.app)
 - **FlyRank Credential Verification**: [https://internship.flyrank.ai/verify?id=FR-2026-PO&first_name=Philip](https://internship.flyrank.ai/verify?id=FR-2026-PO&first_name=Philip)
+- **The Plan to Keep Building (Impact Project)**: [docs/ai-fluency/the-plan-to-keep-building/README.md](./docs/ai-fluency/the-plan-to-keep-building/README.md)
 - **Business Value & Client Integration Architecture**: [docs/BUSINESS_VALUE_AND_INTEGRATION_GUIDE.md](./docs/BUSINESS_VALUE_AND_INTEGRATION_GUIDE.md)
 
 ---
